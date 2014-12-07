@@ -1,0 +1,6 @@
+
+angular.module('chat.application.services',[]).value('USER',{}).value('SOCKET_URL','localhost:8000')
+.factory('socket',function(){
+ var socket = io.connect('http://localhost:8000');
+return socket;
+});

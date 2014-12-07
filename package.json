@@ -1,0 +1,15 @@
+{
+  "name": "kranti",
+  "version": "0.0.1",
+  "description": "Version One of the app ",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "express": "~4.10.4",
+    "socket.io": "~1.2.1"
+  }
+}

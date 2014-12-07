@@ -1,0 +1,36 @@
+<style>
+#ChatApplication{
+height: 500px;
+overflow: auto;
+border-style: solid;
+border-width: 2px;
+}
+
+</style>
+
+<ion-view title="Chat Application" >
+    <ion-content has-header="true" padding="true">
+<div id ="ChatApplication">
+		<p ng-repeat='msg in msgs track by $index' ng-modal='sender'>{{msg.username}}: {{msg.message}}</p>
+</div>
+<form ng-submit="post(chatData)" action="" ng-controller="ChatPageController">
+	<input type="text" placeholder="Type a message" ng-model="chatData"/>
+</form>
+
+</ion-content>
+</ion-view>
+<!--
+<ion-list> 
+			<h3>{{sender}}</h3>
+			<ion-item ng-modal="messages"> {{messages}} </ion-item>
+		</ion-list>
+    	<form action="" id="messageContainer">
+      		<input type="text" placeholder="Type a message" id="message" ng-model="inputMessage"></input>
+      		 <button ng-click="post()">
+       			 Post
+    			</button>
+    			<form ng-submit="post()" action="">
+	<input type="text" placeholder="Type a message" ng-model="msg.text"/>
+</form>
+    	</form>
+   <script src="lib/socket.io-1.0.6.js"></script>

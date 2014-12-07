@@ -1,0 +1,13 @@
+<div id ="ChatApplication">
+		<ion-list> 
+			<h3>{{sender}}</h3>
+			<ion-item ng-modal="messages"> {{messages}} </ion-item>
+		</ion-list>
+    	<form action="" id="messageContainer">
+      		<input type="text" placeholder="Type a message" id="message" ng-model="inputMessage"></input>
+      		 <button ng-click="post()">
+       			 Post
+    			</button>
+    	</form>
+</div>
+   <script src="lib/socket.io-1.0.6.js"></script>
