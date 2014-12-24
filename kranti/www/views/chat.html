@@ -1,6 +1,18 @@
-<ion-view title="Let's share some pics" >
+<style>
+#ChatApplication{
+height: 500px;
+overflow: auto;
+border-style: solid;
+border-width: 2px;
+}
+
+</style>
+
+<ion-view title="Chat Application" >
     <ion-content has-header="true" padding="true">
-        <browse-file></browse-file> <!--Directive 1-->
-        <chat-list></chat-list><!--Directive 2-->
-    </ion-content>
-</ion-view>
+<div id ="ChatApplication">
+		<p ng-repeat='msg in msgs track by $index' ng-modal='sender'>{{msg.username}}: {{msg.message}}</p>
+</div>
+<form ng-submit="post(chatData)" action="" ng-controller="ChatController">
+	<input type="text" placeholder="Type a message" ng-model="chatData"/>
+</form>

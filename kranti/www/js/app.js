@@ -3,9 +3,8 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('chatApplication', ['ionic','chat.application.controllers','openfb','chat.application.services','chat.application.directives'])
-
-/*.run(function($ionicPlatform,$state) {
+	angular.module('chatApplication', ['ionic','chat.application.controllers','ngCookies','chat.application.services','chat.application.directives','ngRoute','ngResource'])
+.run(function($ionicPlatform,$state) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -17,37 +16,18 @@ angular.module('chatApplication', ['ionic','chat.application.controllers','openf
     }
     $state.go('home');
   });
-})*/
-.run(function ($rootScope, $state, $ionicPlatform, $window, OpenFB) {
-
-       OpenFB.init('322553731283560','http://localhost:8100/oauthcallback.html', window.localStorage);
-
-        $ionicPlatform.ready(function () {
-            if (window.StatusBar) {
-                StatusBar.styleDefault();
-            }
-        });
-
-        $rootScope.$on('$stateChangeStart', function(event, toState) {
-          if (toState.name !== "home" && toState.name !== "logout" && !$window.sessionStorage['fbtoken']) {
-                $state.go('app.login');
-                event.preventDefault();
-            }
-        });
-
-        $rootScope.$on('OAuthException', function() {
-           $state.go('home');
-        });
-       $state.go('home');
-    })
-
-.config(['$stateProvider',function($stateProvider){
+})
+.config(['$stateProvider','$routeProvider',function($stateProvider, $routeProvider){
         $stateProvider.state('home',{
-            url:'/home',
+            url:'/',
             controller:'HomeController',
             templateUrl:'views/home.html'
+        }).state('mainPage',{
+            url:'mainPage',
+            controller:'MainPageController',
+            templateUrl:'views/main.html'
         }).state('chat',{
-            url:'/chat',
+            url:'/chat/:chatId',
             controller:'ChatController',
             templateUrl:'views/chat.html'
         })
@@ -55,5 +35,28 @@ angular.module('chatApplication', ['ionic','chat.application.controllers','openf
             url:'/chatPage',
             controller:'ChatPageController',
             templateUrl:'views/chatPage.html'
-        });
+        })
+        .state('signUp',{
+ 		  		url:'/signup',
+ 		  		controller:'signUpController',
+ 		  		templateUrl:'views/signUp.html'	       	
+        	})
+        	.state('bloglist',{
+        	  url:'/bloglist',
+        	  controller:'BlogsCtrl',
+        	  templateUrl: 'views/bloglist.html'
+        	})
+        	.state('blogs/create',{
+        	   url:'/blogcreate',
+        	  controller:'BlogsCtrl',
+        	  templateUrl: 'views/blogcreate.html'
+        		
+        	})
+        	.state('blogs/:blogId', {
+        		url:'/blogs/:blogId',
+        		controller:'BlogsCtrl',
+        		templateUrl:'views/blogview.html'
+        		
+        	});
+          
 }]);

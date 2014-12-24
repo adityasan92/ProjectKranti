@@ -1,30 +1,42 @@
 
-angular.module('chat.application.controllers',[]).controller('HomeController',['$scope','USER','$state','$location','OpenFB',function($scope,USER,$state,$location, OpenFB){
-    $scope.user={};
+angular.module('chat.application.controllers',[]).controller('HomeController',['$scope','USER','$state','$location','$rootScope','Auth',function($scope,USER,$state,$location,$rootScope,Auth){
+   $scope.user={};
+
+    
     $scope.next=function(){
-    	 if($scope.user.name == "aditya" && $scope.user.password == "kranti"||$scope.user.name == "sugata" && $scope.user.password == "kranti"){
-        USER.name=$scope.user.name;
-        $state.go('chatPage');
-     }
+    	USER.name=$scope.user.email;
+       Auth.login('password', {
+          'email': $scope.user.email,
+          'password': $scope.user.password
+        },
+        function(err) {
+          //$scope.errors = {};
+
+          if (!err) {
+            //$location.path('/bloglist');
+            $state.go('mainPage');
+            console.log('success');
+          } else {
+           
+			           console.log('error');
+            /*angular.forEach(err.errors, function(error, field) {
+              form[field].$setValidity('mongoose', false);
+              $scope.errors[field] = error.type;
+            });
+            $scope.error.other = err.message;*/
+          }
+      });
+       
     };
-    $scope.fbLogin=function(){
-    	 OpenFB.login('email,read_stream,publish_actions').then(
-                function () {
-                   $location.path('/chatPage');
-                   $state.go('chatPage');
-                },
-                function () {
-                    alert('OpenFB login failed');
-                });
-    };
-     $scope.logout = function () {
-            OpenFB.logout();
-            $state.go('home');
-     };
+    $scope.signup = function(){
+     
+			$state.go('signUp');
+	};
+  
 }]).controller('ChatPageController',['$scope','USER','$rootScope','SOCKET_URL',function($scope,USER,$rootScope,SOCKET_URL){
 
     
-    $scope.msgs=[];
+    /*$scope.msgs=[];
     
    var socket = io(SOCKET_URL);
     
@@ -48,6 +60,145 @@ angular.module('chat.application.controllers',[]).controller('HomeController',['
 			$scope.$digest();
 		}
   	
-  	});
+  	});*/
   
-}]);
+}]).controller('signUpController', function ($scope, Auth, $location) {
+    $scope.register = function(form) {
+      Auth.createUser({
+          email: $scope.user.email,
+          username: $scope.user.username,
+          password: $scope.user.password
+        },
+        function(err) {
+          $scope.errors = {};
+
+          if (!err) {
+            $location.path('/');
+          } else {
+            angular.forEach(err.errors, function(error, field) {
+              form[field].$setValidity('mongoose', false);
+              $scope.errors[field] = error.type;
+            });
+          }
+        }
+      );
+    };
+  }).controller('BlogsCtrl', function ($scope, Blogs, $location, $rootScope, $cookieStore,$stateParams, Chat, Chat2) {
+
+    $scope.create = function() {
+      var blog = new Blogs({
+        title: this.title,
+        content: this.content
+      });
+      blog.$save(function(response) {
+        $location.path("blogs/" + response._id);
+      });
+
+      this.title = "";
+      this.content = "";
+    };
+
+    $scope.remove = function(blog) {
+      blog.$remove();
+
+      for (var i in $scope.blogs) {
+        if ($scope.blogs[i] == blog) {
+          $scope.blogs.splice(i, 1);
+        }
+      }
+    };
+
+    $scope.update = function() {
+      var blog = $scope.blog;
+      blog.$update(function() {
+        $location.path('blogs/' + blog._id);
+      });
+    };
+
+    $scope.find = function() {
+      Blogs.query(function(blogs) {
+        $scope.blogs = blogs;
+      });
+    };
+    
+	$scope.chatTransfer = function(){
+		var userId = $rootScope.currentUser._id; 
+		 
+		Chat2.get({userId: $rootScope.currentUser._id, blogId:$stateParams.blogId},function(chatt){
+		console.log(chatt[0]);
+		if(chatt[0] == 'n' && chatt[1] == 'u' && chatt[2] == 'l' && chatt[3] == 'l' ){
+		
+			console.log('chat is not there');
+			 var chat = new Chat({
+       	 creator: $rootScope.currentUser,
+          blogId: $stateParams.blogId
+     		 });
+     		 
+      	chat.$save(function(response) {
+      	console.log('chat Save');
+      	
+        	$location.path("chat/"  +response._id);
+      	});
+			
+			}else{
+				$location.path("chat/"  +chatt._id);
+			}
+		});		 
+
+	};
+	
+    $scope.findOne = function() {
+    	
+      Blogs.get({
+        blogId: $stateParams.blogId
+      }, function(blog) {
+      	console.log(blog);
+        $scope.blog = blog;
+      });
+    };
+  }).controller('ChatController', function($scope, $rootScope, SOCKET_URL, $stateParams){
+  	 
+  	 $scope.msgs=[];
+    
+   var socket = io(SOCKET_URL);
+   
+  	$scope.post=function(){
+ 		 console.log($scope.chatData);
+		 //socket.emit('user name', $scope.sender);
+	 	 socket.emit('chatMessage',{message:$scope.chatData,username:$rootScope.currentUser.username,chatId:$stateParams.chatId, userId:$rootScope.currentUser._id });
+	    $scope.chatData='';
+	}
+  	socket.on('privatMessage', function(data){
+ 		console.log(data);
+   	$scope.msgs.push(data);
+   	$scope.$digest();
+  });
+  	
+  }).controller('MainPageController', function($scope, $rootScope, SOCKET_URL,$stateParams,Chat,$location, Chat2){
+  //$scope.chatBlogs=[];
+  var socket = io(SOCKET_URL);
+  	$scope.findChat = function() {
+  		socket.emit('newUser',{username:$rootScope.currentUser.username});
+      Chat.query({userId:$rootScope.currentUser._id},function(chat) {
+        console.log(chat);
+        $scope.chats = chat;
+      });
+    };
+  	
+  	$scope.allBlogs = function(){
+  		$location.path('/bloglist');
+  		};
+  		
+  		$scope.findBlog = function() {
+  		
+      Chat2.query({usrId:$rootScope.currentUser._id},function(chat) {
+      	console.log('Its on BTW AHHAHAHAHA');
+      	console.log(chat);
+      	 $scope.chatBlogs = chat;
+       // $scope.chatBlogs.push(chat);
+	
+      });
+    };
+  		
+  	});
+  	

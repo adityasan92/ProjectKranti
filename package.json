@@ -6,10 +6,20 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "BSD",
+  "author": "Aditya Sanghi",
+  "license": "",
   "dependencies": {
     "express": "~4.10.4",
-    "socket.io": "~1.2.1"
+    "socket.io": "~1.2.1",
+    "ejs": "~1.0.0",
+    "passport": "~0.2.1",
+    "passport-local": "~1.0.0",
+    "cookie-parser": "~1.3.3",
+    "connect-mongodb": "~1.1.5",
+    "body-parser": "~1.10.0",
+    "method-override": "~2.3.0",
+    "connect-mongo": "~0.4.1",
+    "express-session": "~1.9.3",
+    "passport.socketio": "~3.4.1"
   }
 }

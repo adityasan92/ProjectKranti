@@ -5,7 +5,7 @@
                 Login 
             </div>
             <div class="item item-text-wrap">
-                <input type="text" placeholder="username" ng-model="user.name"/>
+                <input type="text" placeholder="username" ng-model="user.email"/>
             </div>
             <div class="item item-text-wrap">
                  <input type="text" placeholder="password" ng-model="user.password"/>
@@ -14,6 +14,16 @@
         <div class="content padding">
             <button class="button button-positive button-block" ng-click="next()">
                 SIGN IN
+            </button>
+        </div>
+          <div class="content padding">
+            <button class="button button-positive button-block" ng-click="fbLogin()">
+                     Log in using facebook
+            </button>
+        </div>
+        <div class="content padding">
+            <button class="button button-positive button-block" ng-click="signup()">
+                     Create a Account
             </button>
         </div>
     </ion-content>
