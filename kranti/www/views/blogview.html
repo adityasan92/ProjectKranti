@@ -1,0 +1,16 @@
+<ion-view title="Project Kranti" >
+    <ion-content has-header="true" padding="true">
+<section ng-init="findOne()">
+<div>
+    <h2>{{blog.title}} <a ng-show="currentUser._id == blog.creator._id" href="/blogs/{{blog._id}}/edit">edit</a></h2>
+    <p>{{blog.content}}</p>
+    <div>
+        <span class="badge badge-success">Posted {{blog.created | date:'medium'}}</span>
+        <div class="pull-right"><span class="badge badge-success">Posted by {{blog.creator.username}}</span></div>
+        <!-- <h1><a ng-href="#/chatPage">Message Him</a></h1> -->
+        <p ng-show="currentUser._id != blog.creator._id" ng-click="chatTransfer()">Message HIM</p>
+    </div>
+ </div>
+</section>
+</ion-content>
+</ion-view>

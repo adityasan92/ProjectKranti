@@ -1,0 +1,29 @@
+<ion-view title="Project Kranti" >
+    <ion-content has-header="true" padding="true">
+
+       <section ng-init="findChat()">
+       		 <div> 		
+       			<h1 ng-click="allBlogs()"> click to get the list of all blogs</h1>
+       			<hr>
+       		</div> 
+      
+       		<h1> <b>LIst of all travels</b></h1>
+       		<hr>
+    			<div ng-repeat="chat in chats">
+       		  <h3><a ng-href="#/chat/{{chat._id}}">{{chat.blogger.username}}</a></h3> 
+       		   <p>{{chat.blogId.title}}</p>
+       		  <hr>
+       		 </div>
+       		</section> 
+		<section ng-init="findBlog()">
+			     <h1> <b>LIst of all blog Chat</b></h1>
+       		  <hr>
+					<div ng-repeat="chatBlog in chatBlogs">
+       		  <h3><a ng-href="#/chat/{{chatBlog._id}}">{{chatBlog.creator.username}}</a></h3> 
+       		   <p>{{chatBlog.blogId.title}}</p>
+       		  <hr>
+       		 </div>
+					
+			</section>
+		</ion-content>
+</ion-view>
