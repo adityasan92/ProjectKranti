@@ -10,9 +10,11 @@ border-width: 2px;
 
 <ion-view title="Chat Application" >
     <ion-content has-header="true" padding="true">
+<section ng-init="loadMessages()">
 <div id ="ChatApplication">
 		<p ng-repeat='msg in msgs track by $index' ng-modal='sender'>{{msg.username}}: {{msg.message}}</p>
 </div>
 <form ng-submit="post(chatData)" action="" ng-controller="ChatController">
 	<input type="text" placeholder="Type a message" ng-model="chatData"/>
 </form>
+</section>

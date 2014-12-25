@@ -102,7 +102,7 @@ angular.module('chat.application.services',[]).value('USER',{}).value('BLOGGER',
   			});
   	}).factory('Chat2', function($resource){
   		return $resource('/chatFind/:userId/:blogId',{
-  			chatId:'@chatId',
+  			userId:'@userId',
   			blogId:'@blogId'
   			})	;	
   		

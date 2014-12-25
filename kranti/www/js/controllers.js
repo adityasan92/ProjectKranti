@@ -88,10 +88,12 @@ angular.module('chat.application.controllers',[]).controller('HomeController',['
     $scope.create = function() {
       var blog = new Blogs({
         title: this.title,
-        content: this.content
+        content: this.content,
+        creator:$rootScope.currentUser._id
       });
       blog.$save(function(response) {
-        $location.path("blogs/" + response._id);
+       // $location.path("blogs/" + response._id);
+       $location.path('/bloglist');
       });
 
       this.title = "";
@@ -156,11 +158,28 @@ angular.module('chat.application.controllers',[]).controller('HomeController',['
         $scope.blog = blog;
       });
     };
-  }).controller('ChatController', function($scope, $rootScope, SOCKET_URL, $stateParams){
+  }).controller('ChatController', function($scope, $rootScope, SOCKET_URL, $stateParams, Chat){
   	 
   	 $scope.msgs=[];
     
    var socket = io(SOCKET_URL);
+   
+	$scope.loadMessages = function(){
+		   Chat.query({chatId: $stateParams.chatId},function(mess) {
+      	console.log('The message load method is working');
+      	console.log(mess);
+      	for(var i =0; i< mess.length; i++){
+      		console.log(mess[i].mess);
+      		console.log(mess[i].name);
+      		$scope.msgs.push({message:mess[i].mess,username:mess[i].name});
+      	}
+      	//$scope.chatBlogs = chat;
+       // $scope.chatBlogs.push(chat);
+	
+      });
+		
+	
+	};   
    
   	$scope.post=function(){
  		 console.log($scope.chatData);
@@ -168,8 +187,9 @@ angular.module('chat.application.controllers',[]).controller('HomeController',['
 	 	 socket.emit('chatMessage',{message:$scope.chatData,username:$rootScope.currentUser.username,chatId:$stateParams.chatId, userId:$rootScope.currentUser._id });
 	    $scope.chatData='';
 	}
-  	socket.on('privatMessage', function(data){
+  	socket.on('privateMessage', function(data){
  		console.log(data);
+ 		
    	$scope.msgs.push(data);
    	$scope.$digest();
   });

@@ -101,12 +101,19 @@ console.log('THe chAT MESSAGE SOCKET IO IUS WORKING');
      console.log('its workingg');
     }
   });
-	if(chatPage.creator._id == data.userId){
+  console.log('the chatPage creator id'+ chatPage.creator._id);
+  console.log('user id'+data.userId );
+  console.log('chat message' + data.message);
+  
+	if(sockets[chatPage.blogger.username] != undefined && sockets[chatPage.creator.username] != undefined){
 			console.log('This basically means that the message is to the blogger');
-			sockets[chatPage.blogger.username].emit('privateMessage',{message:data,chatData, sender:data.username})	;
+			console.log(chatPage.blogger.username);
+			sockets[chatPage.blogger.username].emit('privateMessage',{message:data.message, username:data.username})	;
+			sockets[chatPage.creator.username].emit('privateMessage',{message:data.message, username:data.username})	;
 		}else{
-			sockets[chatPage.creator.username].emit('privateMessage',{message:data,chatData, sender:data.username})	;
-		}
+			console.log('basicallky now its sending it to itself');
+         sockets[data.username].emit('privateMessage',{message:data.message, username:data.username});
+	}
   });
   
 });
