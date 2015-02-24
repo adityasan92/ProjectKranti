@@ -88,7 +88,8 @@ angular.module('chat.application.controllers',[]).controller('HomeController',['
     $scope.create = function() {
       var blog = new Blogs({
         title: this.title,
-        content: this.content
+        content: this.content,
+        creator:$rootScope.currentUser._id
       });
       blog.$save(function(response) {
        // $location.path("blogs/" + response._id);
